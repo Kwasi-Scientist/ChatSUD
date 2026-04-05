@@ -1,0 +1,15 @@
+{
+  "crisis_patterns": [
+    "\\b(kill myself|end my life|suicide|suicidal|take my own life|self[-\\s]?harm|cutting)\\b",
+    "\\b(overdose|o\\.d\\.|passed out|not breathing|blue lips|too many pills|too much fentanyl)\\b",
+    "\\b(right now|tonight|today)\\b.*\\b(kill|overdose|harm myself|end it)\\b",
+    "\\b(seizure|delirium tremens|hallucinating and confused|shaking uncontrollably)\\b"
+  ],
+  "medical_refusal_patterns": [
+    "\\b(detox|withdrawal)\\b.*\\b(home|alone|myself)\\b",
+    "\\b(dose|dosage|how much|how many)\\b.*\\b(suboxone|methadone|benzodiazepine|xanax|lorazepam|diazepam)\\b",
+    "\\b(taper|tapering)\\b.*\\b(alcohol|benzodiazepine|xanax|lorazepam|diazepam)\\b",
+    "\\b(can i mix|mixing)\\b.*\\b(alcohol|opioids|benzodiazepines|suboxone|methadone)\\b"
+  ]
+}
+

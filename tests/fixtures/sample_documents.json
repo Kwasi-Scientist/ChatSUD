@@ -1,0 +1,17 @@
+[
+  {
+    "source": "coping-guide.txt",
+    "title": "Coping with Cravings",
+    "text": "Cravings are time-limited and often peak before fading. A practical response is to delay acting on the urge, leave high-risk settings, contact supportive people, and choose one grounding activity for the next 10 to 20 minutes.",
+    "tags": ["alcohol", "recovery"],
+    "substance_category": "alcohol"
+  },
+  {
+    "source": "relapse-prevention.txt",
+    "title": "Relapse Prevention Basics",
+    "text": "Relapse prevention works best when people map triggers, rehearse coping responses, and make the safer choice easy to reach. Small actions like changing the environment, removing supplies, and planning a check-in can reduce the chance of acting on an urge.",
+    "tags": ["general", "planning"],
+    "substance_category": "general"
+  }
+]
+
