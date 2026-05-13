@@ -3,28 +3,29 @@
 @tailwind utilities;
 
 :root {
-  --background: #f4efe4;
-  --panel: rgba(255, 255, 255, 0.82);
-  --panel-strong: rgba(255, 255, 255, 0.94);
-  --border: rgba(23, 33, 38, 0.12);
-  --text: #172126;
-  --muted: #5d6a70;
-  --accent: #bb5a3c;
-  --accent-soft: #f3d9cf;
+  --background: #0b0b0c;
+  --surface: #111113;
+  --surface-raised: #171719;
+  --surface-soft: #202124;
+  --border: #2b2c30;
+  --text: #ececf1;
+  --muted: #9b9ca3;
+  --muted-strong: #c5c5cb;
+  --accent: #f4f4f5;
+  --accent-soft: #303136;
+  --danger: #f87171;
+  color-scheme: dark;
 }
 
 html,
 body {
   min-height: 100%;
-  background:
-    radial-gradient(circle at top left, rgba(140, 161, 127, 0.22), transparent 28%),
-    radial-gradient(circle at top right, rgba(187, 90, 60, 0.18), transparent 24%),
-    linear-gradient(180deg, #f8f3e8 0%, #f1eadb 100%);
+  background: var(--background);
   color: var(--text);
 }
 
 body {
-  font-family: var(--font-body), serif;
+  font-family: var(--font-body), sans-serif;
 }
 
 h1,
@@ -36,7 +37,7 @@ h6,
 button,
 input,
 textarea {
-  font-family: var(--font-heading), sans-serif;
+  font-family: var(--font-body), sans-serif;
 }
 
 * {
@@ -44,9 +45,25 @@ textarea {
 }
 
 .glass {
-  background: var(--panel);
+  background: var(--surface);
   border: 1px solid var(--border);
-  backdrop-filter: blur(18px);
+}
+
+::selection {
+  background: #3b3c42;
+  color: var(--text);
+}
+
+textarea,
+input,
+select,
+button {
+  color: inherit;
+}
+
+textarea::placeholder,
+input::placeholder {
+  color: #74757d;
 }
 
 .dot-wave span {
@@ -71,4 +88,3 @@ textarea {
     transform: translateY(-2px);
   }
 }
-

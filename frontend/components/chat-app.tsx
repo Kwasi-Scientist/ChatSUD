@@ -47,7 +47,7 @@ export function ChatApp() {
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
     const trimmed = input.trim();
-    if (!trimmed) return;
+    if (!trimmed || isStreaming) return;
 
     const assistantPlaceholder: Message = { role: "assistant", content: "" };
     setInput("");
@@ -117,7 +117,7 @@ export function ChatApp() {
   }
 
   return (
-    <main className="min-h-screen p-4 text-[var(--text)] md:p-6">
+    <main className="min-h-screen bg-[var(--background)] text-[var(--text)]">
       <SettingsPanel
         open={settingsOpen}
         region={region}
@@ -128,34 +128,43 @@ export function ChatApp() {
       />
       <SourceDrawer open={drawerOpen} sources={drawerSources} onClose={() => setDrawerOpen(false)} />
 
-      <div className="mx-auto flex min-h-[calc(100vh-2rem)] max-w-7xl gap-4">
-        <aside className="glass hidden w-72 shrink-0 rounded-[28px] p-4 md:flex md:flex-col">
-          <div className="mb-6 flex items-center justify-between">
+      <div className="flex min-h-screen">
+        <aside className="hidden w-72 shrink-0 border-r border-[var(--border)] bg-black p-3 md:flex md:flex-col">
+          <div className="mb-4 flex items-center justify-between px-2 py-1">
             <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">ChatSUD</p>
-              <h1 className="text-2xl font-semibold">Recovery workspace</h1>
+              <p className="text-xs font-medium uppercase text-[var(--muted)]">ChatSUD</p>
+              <h1 className="text-base font-semibold">Recovery chat</h1>
             </div>
-            <button className="rounded-full border px-3 py-2 text-sm" onClick={createSession}>
+            <button
+              className="rounded-lg border border-[var(--border)] px-3 py-2 text-sm text-[var(--muted-strong)] transition hover:bg-[var(--surface-soft)]"
+              onClick={createSession}
+            >
               New
             </button>
           </div>
+
           <button
-            className="mb-4 rounded-2xl border border-[var(--border)] bg-white/70 px-4 py-3 text-left text-sm"
+            className="mb-3 rounded-lg border border-[var(--border)] bg-[var(--surface)] px-3 py-3 text-left text-sm text-[var(--muted-strong)] transition hover:bg-[var(--surface-soft)]"
             onClick={() => setSettingsOpen(true)}
           >
             Region: {region}
             <br />
             Privacy mode: {privacyMode ? "On" : "Off"}
           </button>
-          <div className="space-y-2 overflow-y-auto">
+
+          <div className="space-y-1 overflow-y-auto">
             {sessions.map((session) => (
               <button
                 key={session.id}
-                className={`w-full rounded-2xl px-4 py-3 text-left ${session.id === activeSessionId ? "bg-[var(--accent)] text-white" : "bg-white/70"}`}
+                className={`w-full rounded-lg px-3 py-3 text-left transition ${
+                  session.id === activeSessionId
+                    ? "bg-[var(--surface-soft)] text-[var(--text)]"
+                    : "text-[var(--muted-strong)] hover:bg-[var(--surface)]"
+                }`}
                 onClick={() => setActiveSessionId(session.id)}
               >
-                <p className="truncate font-semibold">{session.title}</p>
-                <p className="truncate text-xs opacity-80">
+                <p className="truncate text-sm font-medium">{session.title}</p>
+                <p className="truncate text-xs opacity-75">
                   {session.messages.at(-1)?.content ?? "Start a new supportive conversation"}
                 </p>
               </button>
@@ -163,72 +172,92 @@ export function ChatApp() {
           </div>
         </aside>
 
-        <section className="glass flex flex-1 flex-col rounded-[32px]">
-          <header className="flex items-center justify-between border-b border-[var(--border)] px-5 py-4">
+        <section className="flex flex-1 flex-col bg-[var(--background)]">
+          <header className="flex items-center justify-between border-b border-[var(--border)] bg-[var(--surface)] px-4 py-3 md:px-5">
             <div>
-              <p className="text-xs uppercase tracking-[0.3em] text-[var(--muted)]">Non-clinical support</p>
-              <h2 className="text-xl font-semibold">Safety-first recovery chat</h2>
+              <p className="text-xs font-medium uppercase text-[var(--muted)]">Non-clinical support</p>
+              <h2 className="text-base font-semibold md:text-lg">Safety-first recovery chat</h2>
             </div>
             <div className="flex items-center gap-2">
               <input
-                className="rounded-full border border-[var(--border)] bg-white px-4 py-2 text-sm"
+                className="w-32 rounded-lg border border-[var(--border)] bg-[var(--surface-raised)] px-3 py-2 text-sm outline-none transition focus:border-[var(--muted)] md:w-44"
                 value={substanceHint}
                 onChange={(event) => setSubstanceHint(event.target.value)}
                 placeholder="Substance hint"
               />
-              <button className="rounded-full border px-3 py-2 text-sm md:hidden" onClick={() => setSettingsOpen(true)}>
+              <button
+                className="rounded-lg border border-[var(--border)] px-3 py-2 text-sm text-[var(--muted-strong)] md:hidden"
+                onClick={() => setSettingsOpen(true)}
+              >
                 Settings
               </button>
             </div>
           </header>
 
-          <div className="flex-1 overflow-y-auto px-4 py-6 md:px-8">
+          <div className="flex-1 overflow-y-auto py-6">
             {activeSession.messages.length === 0 ? (
-              <div className="mx-auto flex max-w-3xl flex-col items-start gap-6 rounded-[28px] border border-[var(--border)] bg-white/70 p-8">
-                <span className="rounded-full bg-[var(--accent-soft)] px-3 py-1 text-xs uppercase tracking-[0.25em]">
+              <div className="mx-auto flex min-h-[55vh] max-w-3xl flex-col items-start justify-center gap-5 px-5">
+                <span className="rounded-md bg-[var(--accent-soft)] px-2.5 py-1 text-xs uppercase text-[var(--muted-strong)]">
                   Welcome
                 </span>
-                <h3 className="text-4xl font-semibold leading-tight">
+                <h3 className="text-3xl font-semibold leading-tight text-[var(--text)] md:text-5xl">
                   A calmer, privacy-first space for recovery support.
                 </h3>
-                <p className="max-w-2xl text-lg text-[var(--muted)]">
+                <p className="max-w-2xl text-base leading-7 text-[var(--muted)] md:text-lg">
                   ChatSUD offers supportive, non-clinical guidance grounded in indexed recovery materials.
                   It is not emergency care, diagnosis, or medical treatment.
                 </p>
               </div>
             ) : (
-              <div className="mx-auto flex max-w-3xl flex-col gap-5">
+              <div className="mx-auto flex max-w-3xl flex-col">
                 {activeSession.messages.map((message, index) => (
                   <article
                     key={`${message.role}-${index}`}
-                    className={`rounded-[28px] px-5 py-4 shadow-sm ${message.role === "user" ? "ml-auto max-w-[80%] bg-[var(--text)] text-white" : "mr-auto max-w-[88%] bg-white/80"}`}
+                    className={`border-b border-[var(--border)] px-5 py-5 ${
+                      message.role === "user" ? "bg-[var(--surface)]" : "bg-[var(--background)]"
+                    }`}
                   >
-                    <p className="whitespace-pre-wrap text-[15px] leading-7">{message.content}</p>
-                    {message.safetyMode && message.safetyMode !== "supportive" ? (
-                      <div className="mt-4 rounded-2xl border border-[var(--accent)] bg-[var(--accent-soft)] p-3 text-sm">
-                        Safety escalation engaged: {message.safetyMode.replace("_", " ")}
+                    <div className="flex gap-4">
+                      <div
+                        className={`mt-1 flex h-7 w-7 shrink-0 items-center justify-center rounded-md text-xs font-semibold ${
+                          message.role === "user"
+                            ? "bg-[var(--accent)] text-black"
+                            : "bg-[var(--surface-soft)] text-[var(--text)]"
+                        }`}
+                      >
+                        {message.role === "user" ? "U" : "C"}
                       </div>
-                    ) : null}
-                    {message.sources?.length ? (
-                      <div className="mt-4 flex flex-wrap gap-2">
-                        {message.sources.map((source) => (
-                          <button
-                            key={`${source.source}-${source.title}`}
-                            className="rounded-full border border-[var(--border)] px-3 py-1 text-xs text-[var(--muted)]"
-                            onClick={() => {
-                              setDrawerSources(message.sources ?? []);
-                              setDrawerOpen(true);
-                            }}
-                          >
-                            {source.title}
-                          </button>
-                        ))}
+                      <div className="min-w-0 flex-1">
+                        <p className="whitespace-pre-wrap text-[15px] leading-7 text-[var(--text)]">
+                          {message.content}
+                        </p>
+                        {message.safetyMode && message.safetyMode !== "supportive" ? (
+                          <div className="mt-4 rounded-lg border border-[var(--danger)]/50 bg-[var(--danger)]/10 p-3 text-sm text-red-200">
+                            Safety escalation engaged: {message.safetyMode.replace("_", " ")}
+                          </div>
+                        ) : null}
+                        {message.sources?.length ? (
+                          <div className="mt-4 flex flex-wrap gap-2">
+                            {message.sources.map((source) => (
+                              <button
+                                key={`${source.source}-${source.title}`}
+                                className="rounded-md border border-[var(--border)] px-2.5 py-1 text-xs text-[var(--muted-strong)] transition hover:bg-[var(--surface-soft)]"
+                                onClick={() => {
+                                  setDrawerSources(message.sources ?? []);
+                                  setDrawerOpen(true);
+                                }}
+                              >
+                                {source.title}
+                              </button>
+                            ))}
+                          </div>
+                        ) : null}
                       </div>
-                    ) : null}
+                    </div>
                   </article>
                 ))}
                 {isStreaming || isPending ? (
-                  <div className="dot-wave rounded-full bg-white/80 px-4 py-3 text-sm text-[var(--muted)]">
+                  <div className="dot-wave mx-5 mt-4 w-fit rounded-lg bg-[var(--surface-raised)] px-4 py-3 text-sm text-[var(--muted)]">
                     <span>.</span>
                     <span>.</span>
                     <span>.</span>
@@ -238,21 +267,22 @@ export function ChatApp() {
             )}
           </div>
 
-          <form className="border-t border-[var(--border)] p-4 md:p-5" onSubmit={handleSubmit}>
-            <div className="mx-auto flex max-w-3xl flex-col gap-3 rounded-[28px] border border-[var(--border)] bg-white/80 p-3">
+          <form className="border-t border-[var(--border)] bg-[var(--surface)] p-3 md:p-4" onSubmit={handleSubmit}>
+            <div className="mx-auto flex max-w-3xl flex-col gap-3 rounded-xl border border-[var(--border)] bg-[var(--surface-raised)] p-3 shadow-2xl">
               <textarea
-                className="min-h-28 resize-none rounded-[22px] bg-transparent p-3 outline-none"
+                className="min-h-24 resize-none bg-transparent p-2 text-[15px] leading-6 outline-none"
                 placeholder="Share what is going on, what feels risky, or what kind of support would help right now..."
                 value={input}
                 onChange={(event) => setInput(event.target.value)}
               />
               <div className="flex items-center justify-between gap-3">
-                <p className="text-sm text-[var(--muted)]">
+                <p className="text-xs text-[var(--muted)] md:text-sm">
                   ChatSUD is supportive and safety-first, not clinical care.
                 </p>
                 <button
-                  className="rounded-full bg-[var(--accent)] px-5 py-3 text-sm font-semibold text-white"
+                  className="rounded-lg bg-[var(--accent)] px-4 py-2.5 text-sm font-semibold text-black transition hover:bg-white disabled:opacity-60"
                   type="submit"
+                  disabled={isStreaming}
                 >
                   Send
                 </button>
